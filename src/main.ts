@@ -2,6 +2,7 @@ import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { ValidationPipe } from '@nestjs/common';
 import { PrismaExceptionFilter } from './common/filters/prisma-exception.filter';
+import { SwaggerService } from './common/swagger/swagger.service';
 import { GlobalValidationPipe } from './common/pipes/validation.pipe';
 
 async function bootstrap() {
@@ -11,11 +12,7 @@ async function bootstrap() {
 
   app.useGlobalFilters(new PrismaExceptionFilter());
 
-  const config = new DocumentBuilder()
-    .setTitle('Simple Employee Maintenance API')
-    .setDescription('API to manage employees and departments')
-    .setVersion('1.0')
-    .build();
+  SwaggerService.setup(app);
 
   const document = SwaggerModule.createDocument(app, config);
 
