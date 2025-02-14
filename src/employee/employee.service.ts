@@ -1,4 +1,4 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { CreateEmployeeDto } from './dto/create-employee.dto';
 import { UpdateEmployeeDto } from './dto/update-employee.dto';
 import { PrismaService } from '../prisma/prisma.service';
@@ -8,18 +8,6 @@ export class EmployeeService {
   constructor(private prisma: PrismaService) {}
 
   async create(createEmployeeDto: CreateEmployeeDto) {
-    if (createEmployeeDto.departmentId) {
-      const department = await this.prisma.department.findUnique({
-        where: { id: createEmployeeDto.departmentId },
-      });
-
-      if (!department) {
-        throw new BadRequestException(
-          `Department with ID ${createEmployeeDto.departmentId} does not exist.`,
-        );
-      }
-    }
-
     return this.prisma.employee.create({ data: createEmployeeDto });
   }
 
