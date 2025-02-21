@@ -6,6 +6,7 @@ import {
   Outlet,
 } from 'react-router-dom';
 import { MainLayout } from '@/shared/layouts/MainLayout';
+import { EmployeeList } from '@employees/presentation/pages/EmployeeList';
 
 const AppRoutes = () => {
   return (
@@ -18,8 +19,8 @@ const AppRoutes = () => {
             </MainLayout>
           }
         >
-          <Route path="/" element={<></>} />
-          <Route path="/employees" element={<></>} />
+          <Route path="/" element={<EmployeeList />} />
+          <Route path="/employees" element={<EmployeeList />} />
         </Route>
         <Route path="*" element={<Navigate to="/" />} />
       </Routes>
