@@ -1,0 +1,10 @@
+{
+  "singleQuote": true,
+  "trailingComma": "all",
+  "endOfLine": "auto",
+  "plugins": [
+    "prettier-plugin-tailwindcss"
+  ],
+  "parser": "babel-ts",
+  "printWidth": 80
+}
