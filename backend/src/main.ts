@@ -11,6 +11,8 @@ async function bootstrap() {
 
   app.useGlobalFilters(new PrismaExceptionFilter());
 
+  app.enableCors();
+
   SwaggerService.setup(app);
 
   const port = process.env.PORT ?? 3000;
