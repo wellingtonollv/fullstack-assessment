@@ -5,7 +5,7 @@ export const useDeleteEmployee = () => {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: async (id: string) => {
+    mutationFn: async (id: number) => {
       return await deleteEmployee(id);
     },
     onSuccess: () => {
