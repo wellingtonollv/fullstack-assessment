@@ -1,9 +1,11 @@
-import { Link } from 'react-router-dom';
 import { Suspense, lazy } from 'react';
 
-import { useGetEmployees } from '@employees/application/queries/useGetEmployee';
-import { Button } from '@/shared/components/ui/button';
+import { useGetEmployees } from '@employees/application/queries/useGetEmployees';
 import { getEmployeeCount } from '@employees/domain/use-cases/getEmployeeCount';
+import { Button } from '@/shared/components/ui/button';
+import { PlusIcon } from 'lucide-react';
+import { useModal } from '@/shared/providers/modal/useModal';
+import { CreateEmployeeContent } from '@employees/presentation/components/modals/CreateEmployeeContent';
 
 const EmployeeGrid = lazy(
   () => import('@employees/presentation/components/EmployeeGrid/EmployeeGrid'),
@@ -12,13 +14,19 @@ const EmployeeGrid = lazy(
 export const EmployeeList = () => {
   const { data: employees, error } = useGetEmployees();
   const totalEmployees = getEmployeeCount(employees);
+  const { open } = useModal();
+
+  function handleCreateEmployee() {
+    open(<CreateEmployeeContent />, 'Create Employee');
+  }
 
   return (
     <div>
       <div className="mb-4 flex items-center justify-between">
         <p className="text-gray-600">{totalEmployees} employees registered</p>
-        <Button asChild>
-          <Link to="/employees/create">+ New Employee</Link>
+        <Button onClick={handleCreateEmployee}>
+          <PlusIcon className="mr-2 h-6 w-6" />
+          <span>New Employee</span>
         </Button>
       </div>
 
