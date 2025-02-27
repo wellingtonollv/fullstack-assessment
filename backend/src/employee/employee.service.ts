@@ -12,7 +12,10 @@ export class EmployeeService {
   }
 
   findAll() {
-    return this.prisma.employee.findMany({ include: { department: true } });
+    return this.prisma.employee.findMany({
+      include: { department: true },
+      orderBy: { id: 'asc' },
+    });
   }
 
   findOne(id: number) {
