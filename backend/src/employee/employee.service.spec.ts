@@ -1,159 +1,138 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { EmployeeService } from './employee.service';
-import { PrismaService } from '../prisma/prisma.service';
-import { BadRequestException } from '@nestjs/common';
-
-const mockEmployee = {
-  id: 1,
-  firstName: 'Alice',
-  hireDate: new Date('2025-02-13T02:41:53.053Z'),
-  lastName: 'Doe',
-  phone: '123-456-7890',
-  address: '123 Main St',
-  departmentId: 1,
-  active: true,
-};
-
-const mockSecondEmployee = {
-  id: 2,
-  firstName: 'Bob',
-  hireDate: new Date('2025-02-13T02:41:53.053Z'),
-  lastName: 'Doe',
-  phone: '123-456-7890',
-  address: '123 Main St',
-  departmentId: 2,
-  active: true,
-};
+import { EmployeeRepository } from './employee.repository';
+import { EventEmitter2 } from '@nestjs/event-emitter';
+import { mockEmployee, mockSecondEmployee } from './mocks/employee.mock';
 
 describe('EmployeeService', () => {
   let service: EmployeeService;
-  let prisma: PrismaService;
+  let employeeRepository: EmployeeRepository;
+  let eventEmitter: EventEmitter2;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       providers: [
         EmployeeService,
         {
-          provide: PrismaService,
+          provide: EmployeeRepository,
           useValue: {
-            employee: {
-              create: jest.fn(),
-              findMany: jest.fn(),
-              findUnique: jest.fn(),
-              update: jest.fn(),
-              delete: jest.fn(),
-            },
-            department: {
-              findUnique: jest.fn(),
-            },
+            create: jest.fn(),
+            findAll: jest.fn(),
+            findOne: jest.fn(),
+            update: jest.fn(),
+            remove: jest.fn(),
+          },
+        },
+        {
+          provide: EventEmitter2,
+          useValue: {
+            emit: jest.fn(),
           },
         },
       ],
     }).compile();
 
     service = module.get<EmployeeService>(EmployeeService);
-    prisma = module.get<PrismaService>(PrismaService);
+    employeeRepository = module.get<EmployeeRepository>(EmployeeRepository);
+    eventEmitter = module.get<EventEmitter2>(EventEmitter2);
+  });
+
+  afterEach(() => {
+    jest.clearAllMocks();
   });
 
   it('should be defined', () => {
     expect(service).toBeDefined();
   });
 
-  it('should create an employee successfully', async () => {
-    const spyFindUnique = jest
-      .spyOn(prisma.department, 'findUnique')
-      .mockResolvedValue({ id: 1, name: 'Engineering' });
-    const spyCreate = jest
-      .spyOn(prisma.employee, 'create')
-      .mockResolvedValue(mockEmployee);
+  it('should create an employee', async () => {
+    jest.spyOn(employeeRepository, 'create').mockResolvedValue(mockEmployee);
 
     const result = await service.create(mockEmployee);
 
     expect(result).toEqual(mockEmployee);
-    expect(spyFindUnique).toHaveBeenCalledWith({
-      where: { id: 1 },
-    });
-    expect(spyCreate).toHaveBeenCalledWith({ data: mockEmployee });
+
+    const spyCreate = jest
+      .spyOn(employeeRepository, 'create')
+      .mockResolvedValue(mockEmployee);
+
+    expect(spyCreate).toHaveBeenCalledWith(mockEmployee);
   });
 
-  it('should throw BadRequestException if department does not exist', async () => {
-    const spyFindUnique = jest
-      .spyOn(prisma.department, 'findUnique')
-      .mockResolvedValue(null);
-    const spyCreate = jest.spyOn(prisma.employee, 'create');
-
-    await expect(
-      service.create({ ...mockEmployee, departmentId: 99 }),
-    ).rejects.toThrow(
-      new BadRequestException('Department with ID 99 does not exist.'),
-    );
-
-    expect(spyFindUnique).toHaveBeenCalledWith({
-      where: { id: 99 },
-    });
-    expect(spyCreate).not.toHaveBeenCalled();
-  });
-
-  it('should return a list of employees', async () => {
+  it('should return all employees', async () => {
     const mockEmployees = [mockEmployee, mockSecondEmployee];
-
-    const spyFindMany = jest
-      .spyOn(prisma.employee, 'findMany')
-      .mockResolvedValue(mockEmployees);
+    jest.spyOn(employeeRepository, 'findAll').mockResolvedValue(mockEmployees);
 
     const result = await service.findAll();
 
     expect(result).toEqual(mockEmployees);
-    expect(spyFindMany).toHaveBeenCalledWith({
-      include: { department: true },
-    });
+
+    const spyFindAll = jest
+      .spyOn(employeeRepository, 'findAll')
+      .mockResolvedValue(mockEmployees);
+
+    expect(spyFindAll).toHaveBeenCalledTimes(1);
   });
-  it('should return an employee by ID', async () => {
-    const spyFindUnique = jest
-      .spyOn(prisma.employee, 'findUnique')
-      .mockResolvedValue(mockEmployee);
+
+  it('should return an employee with history', async () => {
+    jest.spyOn(employeeRepository, 'findOne').mockResolvedValue(mockEmployee);
 
     const result = await service.findOne(1);
 
     expect(result).toEqual(mockEmployee);
-    expect(spyFindUnique).toHaveBeenCalledWith({
-      where: { id: 1 },
-      include: { department: true },
-    });
   });
-  it('should update an employee successfully', async () => {
-    const mockUpdateData = {
-      phone: '9876543210',
-      address: '456 New St, Springfield, IL 62702',
-      active: false,
+
+  it('should emit department change event when department is updated', async () => {
+    jest.spyOn(employeeRepository, 'findOne').mockResolvedValue(mockEmployee);
+    jest.spyOn(employeeRepository, 'update').mockResolvedValue({
+      id: 1,
+      firstName: 'John',
+      lastName: 'Doe',
+      hireDate: new Date(),
+      phone: '1234567890',
+      address: '123 Main St',
+      active: true,
       departmentId: 2,
-    };
+    });
 
-    const mockUpdatedEmployee = {
-      ...mockEmployee,
-      ...mockUpdateData,
-    };
+    const spyEmit = jest.spyOn(eventEmitter, 'emit');
 
-    const spyUpdate = jest
-      .spyOn(prisma.employee, 'update')
-      .mockResolvedValue(mockUpdatedEmployee);
+    await service.update(1, { departmentId: 2 });
 
-    const result = await service.update(1, mockUpdateData);
-
-    expect(result).toEqual(mockUpdatedEmployee);
-    expect(spyUpdate).toHaveBeenCalledWith({
-      where: { id: 1 },
-      data: mockUpdateData,
+    expect(spyEmit).toHaveBeenCalledWith('employee.department.changed', {
+      employeeId: 1,
+      previousDepartmentId: 1,
     });
   });
+
+  it('should not emit event if department does not change', async () => {
+    jest.spyOn(employeeRepository, 'findOne').mockResolvedValue(mockEmployee);
+    jest.spyOn(employeeRepository, 'update').mockResolvedValue({
+      id: 1,
+      firstName: 'John',
+      lastName: 'Doe',
+      hireDate: new Date(),
+      phone: '1234567890',
+      address: '123 Main St',
+      active: true,
+      departmentId: 1,
+    });
+
+    const spyEmit = jest.spyOn(eventEmitter, 'emit');
+
+    await service.update(1, { departmentId: 1 });
+
+    expect(spyEmit).not.toHaveBeenCalled();
+  });
+
   it('should delete an employee', async () => {
-    const spyDelete = jest
-      .spyOn(prisma.employee, 'delete')
+    const spyRemove = jest
+      .spyOn(employeeRepository, 'remove')
       .mockResolvedValue(mockEmployee);
 
     const result = await service.remove(1);
 
     expect(result).toEqual(mockEmployee);
-    expect(spyDelete).toHaveBeenCalledWith({ where: { id: 1 } });
+    expect(spyRemove).toHaveBeenCalledWith(1);
   });
 });

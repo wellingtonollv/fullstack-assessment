@@ -1,38 +1,46 @@
 import { Injectable } from '@nestjs/common';
 import { CreateEmployeeDto } from './dto/create-employee.dto';
 import { UpdateEmployeeDto } from './dto/update-employee.dto';
-import { PrismaService } from '../prisma/prisma.service';
+import { EmployeeRepository } from './employee.repository';
+import { EventEmitter2 } from '@nestjs/event-emitter';
 
 @Injectable()
 export class EmployeeService {
-  constructor(private prisma: PrismaService) {}
+  constructor(
+    private employeeRepository: EmployeeRepository,
+    private eventEmitter: EventEmitter2,
+  ) {}
 
   async create(createEmployeeDto: CreateEmployeeDto) {
-    return this.prisma.employee.create({ data: createEmployeeDto });
+    return this.employeeRepository.create(createEmployeeDto);
   }
 
   findAll() {
-    return this.prisma.employee.findMany({
-      include: { department: true },
-      orderBy: { id: 'asc' },
-    });
+    return this.employeeRepository.findAll();
   }
 
-  findOne(id: number) {
-    return this.prisma.employee.findUnique({
-      where: { id },
-      include: { department: true },
-    });
+  async findOne(id: number) {
+    return this.employeeRepository.findOne(id);
   }
 
-  update(id: number, updateEmployeeDto: UpdateEmployeeDto) {
-    return this.prisma.employee.update({
-      where: { id },
-      data: updateEmployeeDto,
-    });
+  async update(id: number, updateEmployeeDto: UpdateEmployeeDto) {
+    const employee = await this.employeeRepository.findOne(id);
+
+    const departmentChanged =
+      updateEmployeeDto?.departmentId &&
+      updateEmployeeDto.departmentId !== employee.departmentId;
+
+    if (departmentChanged) {
+      this.eventEmitter.emit('employee.department.changed', {
+        employeeId: id,
+        previousDepartmentId: employee.departmentId,
+      });
+    }
+
+    return this.employeeRepository.update(id, updateEmployeeDto);
   }
 
   remove(id: number) {
-    return this.prisma.employee.delete({ where: { id } });
+    return this.employeeRepository.remove(id);
   }
 }
