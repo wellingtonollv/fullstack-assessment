@@ -5,7 +5,6 @@ import {
   IsNotEmpty,
   IsOptional,
   IsBoolean,
-  IsInt,
   IsDate,
 } from 'class-validator';
 
@@ -56,11 +55,10 @@ export class CreateEmployeeDto {
   active?: boolean;
 
   @ApiProperty({
-    example: 1,
-    description: 'Department ID of the employee',
+    example: 'development',
+    description: 'Department name of the employee',
     required: false,
   })
-  @IsOptional()
-  @IsInt()
-  departmentId?: number;
+  @IsString()
+  department: string;
 }

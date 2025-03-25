@@ -72,7 +72,7 @@ describe('EmployeeController', () => {
       phone: '9876543210',
       address: '456 New St, Springfield, IL 62702',
       active: false,
-      departmentId: 2,
+      department: 'HR',
     };
 
     const mockUpdatedEmployee = {

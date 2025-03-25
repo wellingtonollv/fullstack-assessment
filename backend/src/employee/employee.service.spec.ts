@@ -1,12 +1,21 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { EmployeeService } from './employee.service';
-import { EmployeeRepository } from './employee.repository';
 import { EventEmitter2 } from '@nestjs/event-emitter';
-import { mockEmployee, mockSecondEmployee } from './mocks/employee.mock';
+import {
+  mockCreateEmployeePrisma,
+  mockCreateEmployeeService,
+  mockEmployee,
+  mockEmployeeHistory,
+  mockEmployeeHistoryPrisma,
+  mockEmployeePrisma,
+  mockSecondEmployee,
+  mockSecondEmployeePrisma,
+} from './mocks/employee.mock';
+import { PrismaService } from '../prisma/prisma.service';
 
 describe('EmployeeService', () => {
   let service: EmployeeService;
-  let employeeRepository: EmployeeRepository;
+  let prismaService: PrismaService;
   let eventEmitter: EventEmitter2;
 
   beforeEach(async () => {
@@ -14,13 +23,18 @@ describe('EmployeeService', () => {
       providers: [
         EmployeeService,
         {
-          provide: EmployeeRepository,
+          provide: PrismaService,
           useValue: {
-            create: jest.fn(),
-            findAll: jest.fn(),
-            findOne: jest.fn(),
-            update: jest.fn(),
-            remove: jest.fn(),
+            employee: {
+              create: jest.fn(),
+              findMany: jest.fn(),
+              findUnique: jest.fn(),
+              update: jest.fn(),
+              delete: jest.fn(),
+            },
+            department: {
+              findUnique: jest.fn(),
+            },
           },
         },
         {
@@ -33,7 +47,7 @@ describe('EmployeeService', () => {
     }).compile();
 
     service = module.get<EmployeeService>(EmployeeService);
-    employeeRepository = module.get<EmployeeRepository>(EmployeeRepository);
+    prismaService = module.get<PrismaService>(PrismaService);
     eventEmitter = module.get<EventEmitter2>(EventEmitter2);
   });
 
@@ -46,58 +60,60 @@ describe('EmployeeService', () => {
   });
 
   it('should create an employee', async () => {
-    jest.spyOn(employeeRepository, 'create').mockResolvedValue(mockEmployee);
-
-    const result = await service.create(mockEmployee);
-
-    expect(result).toEqual(mockEmployee);
+    jest.spyOn(prismaService.department, 'findUnique').mockResolvedValueOnce({
+      id: 1,
+      name: 'Engineering',
+    });
 
     const spyCreate = jest
-      .spyOn(employeeRepository, 'create')
+      .spyOn(prismaService.employee, 'create')
       .mockResolvedValue(mockEmployee);
 
-    expect(spyCreate).toHaveBeenCalledWith(mockEmployee);
+    const serviceResult = await service.create(mockCreateEmployeeService);
+
+    expect(serviceResult).toEqual(mockEmployee);
+
+    expect(spyCreate).toHaveBeenCalledWith({
+      data: mockCreateEmployeePrisma,
+    });
   });
 
   it('should return all employees', async () => {
-    const mockEmployees = [mockEmployee, mockSecondEmployee];
-    jest.spyOn(employeeRepository, 'findAll').mockResolvedValue(mockEmployees);
+    jest
+      .spyOn(prismaService.employee, 'findMany')
+      .mockResolvedValue([mockEmployeePrisma, mockSecondEmployeePrisma]);
 
     const result = await service.findAll();
 
-    expect(result).toEqual(mockEmployees);
-
-    const spyFindAll = jest
-      .spyOn(employeeRepository, 'findAll')
-      .mockResolvedValue(mockEmployees);
-
-    expect(spyFindAll).toHaveBeenCalledTimes(1);
+    expect(result).toEqual([mockEmployee, mockSecondEmployee]);
   });
 
   it('should return an employee with history', async () => {
-    jest.spyOn(employeeRepository, 'findOne').mockResolvedValue(mockEmployee);
+    jest.spyOn(prismaService.employee, 'findUnique').mockResolvedValue({
+      ...mockEmployeePrisma,
+      ...mockEmployeeHistoryPrisma,
+    });
 
     const result = await service.findOne(1);
 
-    expect(result).toEqual(mockEmployee);
+    expect(result).toEqual({
+      ...mockEmployee,
+      ...mockEmployeeHistory,
+    });
   });
 
   it('should emit department change event when department is updated', async () => {
-    jest.spyOn(employeeRepository, 'findOne').mockResolvedValue(mockEmployee);
-    jest.spyOn(employeeRepository, 'update').mockResolvedValue({
-      id: 1,
-      firstName: 'John',
-      lastName: 'Doe',
-      hireDate: new Date(),
-      phone: '1234567890',
-      address: '123 Main St',
-      active: true,
+    jest
+      .spyOn(prismaService.employee, 'findUnique')
+      .mockResolvedValue(mockEmployeePrisma);
+    jest.spyOn(prismaService.employee, 'update').mockResolvedValue({
+      ...mockEmployee,
       departmentId: 2,
     });
 
     const spyEmit = jest.spyOn(eventEmitter, 'emit');
 
-    await service.update(1, { departmentId: 2 });
+    await service.update(1, { department: 'HR' });
 
     expect(spyEmit).toHaveBeenCalledWith('employee.department.changed', {
       employeeId: 1,
@@ -106,33 +122,26 @@ describe('EmployeeService', () => {
   });
 
   it('should not emit event if department does not change', async () => {
-    jest.spyOn(employeeRepository, 'findOne').mockResolvedValue(mockEmployee);
-    jest.spyOn(employeeRepository, 'update').mockResolvedValue({
-      id: 1,
-      firstName: 'John',
-      lastName: 'Doe',
-      hireDate: new Date(),
-      phone: '1234567890',
-      address: '123 Main St',
-      active: true,
-      departmentId: 1,
-    });
+    jest
+      .spyOn(prismaService.employee, 'findUnique')
+      .mockResolvedValue(mockEmployeePrisma);
+    jest
+      .spyOn(prismaService.employee, 'update')
+      .mockResolvedValue(mockEmployeePrisma);
 
     const spyEmit = jest.spyOn(eventEmitter, 'emit');
 
-    await service.update(1, { departmentId: 1 });
-
+    await service.update(1, { department: 'Engineering' });
     expect(spyEmit).not.toHaveBeenCalled();
   });
 
   it('should delete an employee', async () => {
-    const spyRemove = jest
-      .spyOn(employeeRepository, 'remove')
-      .mockResolvedValue(mockEmployee);
+    jest
+      .spyOn(prismaService.employee, 'delete')
+      .mockResolvedValue(mockEmployeePrisma);
 
     const result = await service.remove(1);
 
     expect(result).toEqual(mockEmployee);
-    expect(spyRemove).toHaveBeenCalledWith(1);
   });
 });
