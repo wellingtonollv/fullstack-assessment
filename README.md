@@ -104,6 +104,9 @@ Use this mode if you just want to run the application using pre-built Docker ima
 npm run start
 ```	
 
+- Open your browser and navigate to `http://localhost:5173` to access the application.
+- Open your browser and navigate to `http://localhost:4000/swagger` to access the API documentation.
+
 ### 2. Development Mode — local build (`start:dev`)
 
 Use this mode if you want to work on the source code and rebuild containers locally.
