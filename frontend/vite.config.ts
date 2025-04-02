@@ -6,6 +6,10 @@ import svgr from 'vite-plugin-svgr';
 export default defineConfig({
   plugins: [react(), svgr()],
   base: '',
+  server: {
+    port: 5173,
+    host: true,
+  },
   resolve: {
     alias: {
       '@employees': path.resolve(__dirname, './src/features/employees'),
