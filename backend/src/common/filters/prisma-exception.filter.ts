@@ -34,7 +34,6 @@ export class PrismaExceptionFilter implements ExceptionFilter {
       }
 
       case 'P2003':
-        console.log(exception);
         errorResponse = new BadRequestException({
           statusCode: 400,
           message: 'Foreign key violation',
@@ -52,7 +51,7 @@ export class PrismaExceptionFilter implements ExceptionFilter {
         break;
 
       default:
-        console.log(exception);
+        console.error(exception);
         errorResponse = new InternalServerErrorException('Database error');
         break;
     }
