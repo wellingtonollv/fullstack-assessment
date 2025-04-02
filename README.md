@@ -94,10 +94,22 @@ Entity-Relationship Diagram available in `/assets`:
 
 ## How to Run 
 
+You can run the project in two different modes, depending on your goals:
+
+### 🔧 1. Development Mode (local build)
+
 1. **Clone** the repository and navigate to the **root directory**.
 2. **Build and run** the containers with:
    ```bash
-   docker compose up -d
+   docker compose -f docker-compose.development.yml up --build -d
+   ```
+
+### 🔧 2. Production Mode (pre-built images)
+
+1. **Clone** the repository and navigate to the **root directory**.
+2. **Build and run** the containers with:
+   ```bash
+    docker compose up -d
    ```
 
 ## Next steps
