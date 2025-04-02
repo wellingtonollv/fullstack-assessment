@@ -6,6 +6,7 @@ import { Button } from '@/shared/components/ui/button';
 import { PlusIcon } from 'lucide-react';
 import { useModal } from '@/shared/providers/modal/useModal';
 import { CreateEmployeeContent } from '@employees/presentation/components/modals/CreateEmployeeContent';
+import { Skeleton } from '@/shared/components/ui/skeleton';
 
 const EmployeeGrid = lazy(
   () => import('@employees/presentation/components/EmployeeGrid/EmployeeGrid'),
@@ -32,7 +33,7 @@ export const EmployeeList = () => {
 
       {error && <p className="text-red-500">Error fetching employees.</p>}
 
-      <Suspense fallback={<p>Loading employees...</p>}>
+      <Suspense fallback={<Skeleton className="h-card w-full rounded-xl" />}>
         {employees && <EmployeeGrid employees={employees} />}
       </Suspense>
     </div>

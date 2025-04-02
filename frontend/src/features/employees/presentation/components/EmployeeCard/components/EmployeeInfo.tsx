@@ -1,5 +1,5 @@
 import { getElapsedTime } from '@employees/domain/use-cases/getElapsedTime';
-import { getFormattedDate } from '@employees/domain/use-cases/getFormattedDate';
+import { getFormattedIsoDate } from '@employees/domain/use-cases/getFormattedIsoDate';
 
 type EmployeeInfoProps = {
   firstName: string;
@@ -26,7 +26,7 @@ export const EmployeeInfo = ({
       </div>
       <p className="text-sm font-medium text-gray-500">Hire Date:</p>
       <p className="text-sm text-gray-500">
-        {getFormattedDate(hireDate)} ({getElapsedTime(hireDate)})
+        {getFormattedIsoDate(hireDate)} ({getElapsedTime(hireDate)})
       </p>
     </div>
   );

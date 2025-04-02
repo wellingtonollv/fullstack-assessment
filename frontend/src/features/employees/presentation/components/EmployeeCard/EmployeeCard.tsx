@@ -11,11 +11,12 @@ type EmployeeCardProps = {
 
 const EmployeeCard = ({ employee }: EmployeeCardProps) => {
   const { status, variant } = getEmployeeStatus(employee.active);
-
+  const fullName = `${employee.firstName} ${employee.lastName}`;
+  
   return (
     <div
       role="article"
-      className="h-card flex-col overflow-hidden rounded-xl border border-gray-100 shadow-sm transition-all duration-300 hover:shadow-md dark:border-neutral-800"
+      className="h-card flex-col overflow-hidden rounded-xl border border-gray-300 shadow-sm transition-all duration-300 hover:shadow-md dark:border-neutral-800"
     >
       <EmployeeAvatar
         className="h-[250px]"
@@ -28,10 +29,10 @@ const EmployeeCard = ({ employee }: EmployeeCardProps) => {
         <EmployeeInfo
           firstName={employee.firstName}
           lastName={employee.lastName}
-          department={employee.department?.name}
+          department={employee.department}
           hireDate={employee.hireDate}
         />
-        <EmployeeAction id={employee.id} />
+        <EmployeeAction employeeId={employee.id} name={fullName} />
       </section>
     </div>
   );

@@ -1,12 +1,13 @@
 import { Button } from '@/shared/components/ui/button';
 import { useModal } from '@/shared/providers/modal/useModal';
 import { EyeIcon, XIcon } from 'lucide-react';
-import { Link } from 'react-router-dom';
 import { DeleteEmployeeContent } from '../../modals/DeleteEmployeeContent';
+import { EmployeeDetailsContent } from '../../modals/EmployeeDetailsContent';
+import { Employee } from '@employees/domain/models';
 
 type EmployeeActionProps = {
-  employeeId: string;
-  name: string;
+  employeeId: Employee['id'];
+  name: Employee['firstName'] | Employee['lastName'];
 };
 
 export const EmployeeAction = ({ employeeId, name }: EmployeeActionProps) => {
@@ -18,26 +19,31 @@ export const EmployeeAction = ({ employeeId, name }: EmployeeActionProps) => {
       'Delete Employee',
     );
   }
-export const EmployeeAction = ({ id }: EmployeeActionProps) => {
+
+  function handleDetailsEmployee() {
+    open(
+      <EmployeeDetailsContent employeeId={employeeId} />,
+      'Employee Details',
+    );
+  }
 
   return (
     <div className="flex justify-between gap-2">
-      <Button asChild variant="outline" className="flex-1 cursor-pointer">
-        <div>
-          <EyeIcon />
-          <Link to={`/employees/${employeeId}`}>View Details</Link>
-        </div>
+      <Button
+        className="flex-1 cursor-pointer"
+        onClick={handleDetailsEmployee}
+        variant="outline"
+      >
+        <EyeIcon />
+        View Details
       </Button>
       <Button
-        asChild
         className="flex-1 cursor-pointer text-red-600 hover:text-red-600/70"
         onClick={handleDeleteEmployee}
         variant="outline"
       >
-        <div>
-          <XIcon />
-          <Link to={`/employees/${employeeId}/edit`}>Delete</Link>
-        </div>
+        <XIcon />
+        Delete
       </Button>
     </div>
   );
