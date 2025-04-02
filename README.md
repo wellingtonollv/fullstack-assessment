@@ -98,7 +98,7 @@ This project can be run in two modes, depending on your needs:
 
 ### 1. Production Mode — pre-built images (`start`)
 
-Use this mode if you just want to run the application quickly using pre-built Docker images.
+Use this mode if you just want to run the application using pre-built Docker images.
 
 ```bash
 npm run start
