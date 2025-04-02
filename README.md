@@ -9,13 +9,13 @@ This repository contains a full-stack application built with **NestJS** (modular
 1. [Backend](#backend)  
    1.1 [Key Features](#key-features)  
    1.2 [Testing](#testing)  
-   1.3 [Data Modeling](#data-modeling)  
-2. [Infrastructure & CI/CD](#infrastructure--cicd)  
+   1.3 [Data Modeling](#data-modeling)
+2. [Infrastructure & CI/CD](#infrastructure--cicd)
 3. [Frontend](#frontend)  
    3.1 [Key Features](#key-features-1)  
    3.2 [UI Features](#ui-features)  
-   3.3 [Testing](#testing-1)  
-4. [How to Run](#how-to-run)  
+   3.3 [Testing](#testing-1)
+4. [How to Run](#how-to-run)
 5. [Next Steps](#next-steps)
 
 ---
@@ -46,7 +46,7 @@ This repository contains a full-stack application built with **NestJS** (modular
 
 Entity-Relationship Diagram available in `/assets`:
 
-<img src="./assets/ERD.svg" alt="Database ERD" />
+<img src="./assets/ERD.svg" alt="Database ERD" height="600"/>
 
 ---
 
@@ -84,13 +84,14 @@ Entity-Relationship Diagram available in `/assets`:
   Reduces merge conflicts and supports parallel development
 
 ### UI Features
+
 - **Employee Management:** Create, read, update, and delete employee records.
 - **Mobile Responsiveness:** The application is designed to be responsive and user-friendly on mobile devices.
 - **Dark Mode:** Supports dark mode for better user experience.
 
 ### Testing
 
-- Unit tests with **Vitest** and **React Testing Library**  
+- Unit tests with **Vitest** and **React Testing Library**
 
 ## How to Run
 
@@ -102,7 +103,7 @@ Use this mode if you just want to run the application using pre-built Docker ima
 
 ```bash
 npm run start
-```	
+```
 
 - Open your browser and navigate to `http://localhost:5173` to access the application.
 - Open your browser and navigate to `http://localhost:4000/swagger` to access the API documentation.
