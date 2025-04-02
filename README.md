@@ -9,19 +9,20 @@ This repository contains a full-stack application built with **NestJS** (modular
 1. [Backend](#backend)  
    1.1 [Key Features](#key-features)  
    1.2 [Testing](#testing)  
-   1.3 [Data Modeling](#data-modeling)
-2. [Infrastructure & CI/CD](#infrastructure-and-cicd)
+   1.3 [Data Modeling](#data-modeling)  
+2. [Infrastructure & CI/CD](#infrastructure--cicd)  
 3. [Frontend](#frontend)  
    3.1 [Key Features](#key-features-1)  
-   3.2 [Testing](#testing-1)
+   3.2 [UI Features](#ui-features)  
+   3.3 [Testing](#testing-1)  
 4. [How to Run](#how-to-run)  
-5. [Next Steps](#next-steps)  
+5. [Next Steps](#next-steps)
 
 ---
 
-## 🛠 Backend
+## Backend
 
-### 🔹 Key Features
+### Key Features
 
 - **Stack:** NestJS, TypeScript, PostgreSQL, Prisma
 - **Architecture:**
@@ -37,11 +38,11 @@ This repository contains a full-stack application built with **NestJS** (modular
 - **Database Migrations:**  
   Handled through Prisma Migrate.
 
-### 🧪 Testing
+### Testing
 
 - Unit tests using **Jest**.
 
-### 🗂 Data Modeling
+### Data Modeling
 
 Entity-Relationship Diagram available in `/assets`:
 
@@ -49,7 +50,7 @@ Entity-Relationship Diagram available in `/assets`:
 
 ---
 
-## ⚙️ Infrastructure & CI/CD
+## Infrastructure & CI/CD
 
 - **Containerization:** Docker & Docker Compose
 - **Image Registry:** Ready for publishing (e.g., Docker Hub)
@@ -62,14 +63,14 @@ Entity-Relationship Diagram available in `/assets`:
 
 ---
 
-## 🖥 Frontend
+## Frontend
 
-### 🔹 Key Features
+### Key Features
 
 - **Stack:** React, TypeScript, TailwindCSS, ShadCN, Framer Motion, React Query
 - **Architecture:** Feature-based + layered
 
-#### ✅ Why This Architecture?
+#### Why This Architecture?
 
 - **Modular Organization:**  
   Each feature (e.g., Employees, Departments, Users) is self-contained
@@ -87,16 +88,16 @@ Entity-Relationship Diagram available in `/assets`:
 - **Mobile Responsiveness:** The application is designed to be responsive and user-friendly on mobile devices.
 - **Dark Mode:** Supports dark mode for better user experience.
 
-### 🧪 Testing
+### Testing
 
 - Unit tests with **Vitest** and **React Testing Library**  
 
-## ▶️ How to Run
+## How to Run 
 
 1. **Clone** the repository and navigate to the **root directory**.
 2. **Build and run** the containers with:
    ```bash
-   docker compose up --build -d
+   docker compose up -d
    ```
 
 ## Next steps
