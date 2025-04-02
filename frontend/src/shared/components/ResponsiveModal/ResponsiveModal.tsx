@@ -32,10 +32,12 @@ export const ResponsiveModal = ({
   if (isDesktop) {
     return (
       <Dialog open={open} onOpenChange={setOpen}>
-        <DialogContent className="max-h-screen overflow-y-auto sm:max-w-[425px]">
-          <DialogHeader>
-            <DialogTitle>{title}</DialogTitle>
-          </DialogHeader>
+        <DialogContent className="max-h-screen overflow-y-auto sm:max-w-[625px]">
+          {title && (
+            <DialogHeader>
+              <DialogTitle>{title}</DialogTitle>
+            </DialogHeader>
+          )}
           {children}
         </DialogContent>
       </Dialog>
@@ -48,7 +50,7 @@ export const ResponsiveModal = ({
         <DrawerHeader className="text-left">
           <DrawerTitle>{title}</DrawerTitle>
         </DrawerHeader>
-        <div className="px-4 py-6">{children}</div>
+        <div className="px-4 py-6 max-h-[80vh] overflow-auto">{children}</div>
       </DrawerContent>
     </Drawer>
   );
