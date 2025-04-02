@@ -1,0 +1,7 @@
+{
+  "name": "fullstack-assessment",
+  "scripts": {
+    "start": "docker-compose up -d",
+    "start:dev": "docker-compose -f docker-compose.dev.yml up -d"
+  }
+}

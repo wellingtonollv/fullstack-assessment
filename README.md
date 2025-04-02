@@ -92,25 +92,25 @@ Entity-Relationship Diagram available in `/assets`:
 
 - Unit tests with **Vitest** and **React Testing Library**  
 
-## How to Run 
+## How to Run
 
-You can run the project in two different modes, depending on your goals:
+This project can be run in two modes, depending on your needs:
 
-### 🔧 1. Development Mode (local build)
+### 1. Production Mode — pre-built images (`start`)
 
-1. **Clone** the repository and navigate to the **root directory**.
-2. **Build and run** the containers with:
-   ```bash
-   docker compose -f docker-compose.development.yml up --build -d
-   ```
+Use this mode if you just want to run the application quickly using pre-built Docker images.
 
-### 🔧 2. Production Mode (pre-built images)
+```bash
+npm run start
+```	
 
-1. **Clone** the repository and navigate to the **root directory**.
-2. **Build and run** the containers with:
-   ```bash
-    docker compose up -d
-   ```
+### 2. Development Mode — local build (`start:dev`)
+
+Use this mode if you want to work on the source code and rebuild containers locally.
+
+```bash
+npm run start:dev
+```
 
 ## Next steps
 
