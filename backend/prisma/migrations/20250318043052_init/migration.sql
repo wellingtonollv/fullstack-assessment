@@ -65,3 +65,5 @@ INSERT INTO "Employee" ("firstName", "lastName", "hireDate", "phone", "address",
 ('Hank', 'Garcia', '2020-06-25', '777888999', '404 Willow St', true, (SELECT "id" FROM "Department" WHERE "name" = 'Finance')),
 ('Ivy', 'Taylor', '2021-05-20', '555444333', '505 Chestnut St', true, (SELECT "id" FROM "Department" WHERE "name" = 'Sales')),
 ('Jack', 'Davis', '2018-10-18', '222111333', '606 Redwood St', true, (SELECT "id" FROM "Department" WHERE "name" = 'Engineering'));
+
+
