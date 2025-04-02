@@ -4,16 +4,16 @@ export type Employee = {
   lastName: string;
   hireDate: string;
   phone: string;
-  departmentId: number;
   address: string;
-  department: {
-    id: string;
-    name: string;
-  };
+  department: string;
   active: boolean;
+  history: {
+    changedAt: string;
+    department: string;
+  }[];
 };
 
-export type NewEmployee = Omit<Employee, 'id' | 'active' | 'department'> & {
+export type NewEmployee = Omit<Employee, 'id' | 'active' | 'history'> & {
   active?: boolean;
 };
 

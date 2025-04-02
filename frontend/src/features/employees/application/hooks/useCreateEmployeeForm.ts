@@ -13,7 +13,7 @@ export const useCreateEmployeeForm = () => {
       lastName: '',
       hireDate: new Date().toISOString(),
       phone: '',
-      departmentId: 0,
+      department: '',
       address: '',
       active: true,
     },

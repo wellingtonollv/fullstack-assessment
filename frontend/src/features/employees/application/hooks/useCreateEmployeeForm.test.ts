@@ -14,7 +14,7 @@ describe('useCreateEmployeeForm', () => {
       firstName: '',
       lastName: '',
       phone: '',
-      departmentId: 0,
+      department: '',
       address: '',
       active: true,
     });
