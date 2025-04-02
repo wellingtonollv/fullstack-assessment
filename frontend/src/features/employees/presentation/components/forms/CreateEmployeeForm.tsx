@@ -79,13 +79,13 @@ export const CreateEmployeeForm = ({ onSubmit }: CreateEmployeeFormProps) => {
 
         <FormField
           control={form.control}
-          name="departmentId"
+          name="department"
           render={({ field }) => (
             <FormItem>
               <FormLabel>Department</FormLabel>
               <Select
                 value={field.value ? String(field.value) : ''}
-                onValueChange={(value) => field.onChange(Number(value))}
+                onValueChange={(value) => field.onChange(value)}
                 disabled={isLoading}
               >
                 <FormControl>
@@ -95,7 +95,7 @@ export const CreateEmployeeForm = ({ onSubmit }: CreateEmployeeFormProps) => {
                 </FormControl>
                 <SelectContent>
                   {departments?.map((dept) => (
-                    <SelectItem key={dept.id} value={String(dept.id)}>
+                    <SelectItem key={dept.id} value={dept.name}>
                       {dept.name}
                     </SelectItem>
                   ))}

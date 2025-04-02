@@ -32,7 +32,7 @@ describe('DeleteEmployeeContent', () => {
   it('should render confirmation message with employee name', () => {
     render(
       <QueryClientProvider client={queryClient}>
-        <DeleteEmployeeContent employeeId="123" name="John Doe" />
+        <DeleteEmployeeContent employeeId={123} name="John Doe" />
       </QueryClientProvider>,
     );
 
@@ -46,7 +46,7 @@ describe('DeleteEmployeeContent', () => {
   it('should call useDeleteEmployee.mutate and close modal on success', async () => {
     render(
       <QueryClientProvider client={queryClient}>
-        <DeleteEmployeeContent employeeId="123" name="John Doe" />
+        <DeleteEmployeeContent employeeId={123} name="John Doe" />
       </QueryClientProvider>,
     );
 
@@ -68,7 +68,7 @@ describe('DeleteEmployeeContent', () => {
 
     render(
       <QueryClientProvider client={queryClient}>
-        <DeleteEmployeeContent employeeId="123" name="John Doe" />
+        <DeleteEmployeeContent employeeId={123} name="John Doe" />
       </QueryClientProvider>,
     );
 
@@ -79,7 +79,7 @@ describe('DeleteEmployeeContent', () => {
   it('should close modal when clicking cancel', () => {
     render(
       <QueryClientProvider client={queryClient}>
-        <DeleteEmployeeContent employeeId="123" name="John Doe" />
+        <DeleteEmployeeContent employeeId={123} name="John Doe" />
       </QueryClientProvider>,
     );
 
