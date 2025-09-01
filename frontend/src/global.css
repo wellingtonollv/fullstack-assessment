@@ -69,4 +69,26 @@
   body {
     @apply bg-background text-foreground;
   }
+
+  /* Autofill styles for browser autofill state */
+  input:-webkit-autofill,
+  input:-webkit-autofill:hover,
+  input:-webkit-autofill:focus,
+  input:-webkit-autofill:active,
+  input:-internal-autofill-selected {
+    -webkit-box-shadow: 0 0 0 30px hsl(var(--background)) inset !important;
+    -webkit-text-fill-color: hsl(var(--foreground)) !important;
+    background-color: hsl(var(--background)) !important;
+    border-color: hsl(var(--border)) !important;
+  }
+
+  /* Additional autofill styling for dark mode */
+  .dark input:-webkit-autofill,
+  .dark input:-webkit-autofill:hover,
+  .dark input:-webkit-autofill:focus,
+  .dark input:-webkit-autofill:active,
+  .dark input:-internal-autofill-selected {
+    -webkit-box-shadow: 0 0 0 30px hsl(var(--background)) inset !important;
+    -webkit-text-fill-color: hsl(var(--foreground)) !important;
+  }
 }
