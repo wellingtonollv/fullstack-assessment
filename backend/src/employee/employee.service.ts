@@ -94,6 +94,7 @@ export class EmployeeService {
 
     const departmentChanged =
       newDepartmentName && newDepartmentName !== employee.department;
+    const previousDepartmentId = employee.departmentId;
     const departmentId = departmentChanged
       ? await this.getDepartmentIdByName(newDepartmentName)
       : employee.departmentId;
@@ -107,7 +108,7 @@ export class EmployeeService {
     if (departmentChanged) {
       this.eventEmitter.emit('employee.department.changed', {
         employeeId: id,
-        previousDepartmentId: employee.departmentId,
+        previousDepartmentId,
       });
     }
 
