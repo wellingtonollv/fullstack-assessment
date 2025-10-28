@@ -135,6 +135,22 @@ describe('EmployeeService', () => {
     expect(spyEmit).not.toHaveBeenCalled();
   });
 
+  it('should not emit event if database update fails', async () => {
+    jest
+      .spyOn(prismaService.employee, 'findUnique')
+      .mockResolvedValue(mockEmployeePrisma);
+    jest
+      .spyOn(prismaService.employee, 'update')
+      .mockRejectedValue(new Error('Database error'));
+
+    const spyEmit = jest.spyOn(eventEmitter, 'emit');
+
+    await expect(service.update(1, { department: 'HR' })).rejects.toThrow(
+      'Database error',
+    );
+    expect(spyEmit).not.toHaveBeenCalled();
+  });
+
   it('should delete an employee', async () => {
     jest
       .spyOn(prismaService.employee, 'delete')
