@@ -98,18 +98,18 @@ export class EmployeeService {
       ? await this.getDepartmentIdByName(newDepartmentName)
       : employee.departmentId;
 
+    const updatedEmployee = await this.prisma.employee.update({
+      where: { id },
+      include: this.getEmployeeRelations(),
+      data: { ...newEmployeeData, departmentId },
+    });
+
     if (departmentChanged) {
       this.eventEmitter.emit('employee.department.changed', {
         employeeId: id,
         previousDepartmentId: employee.departmentId,
       });
     }
-
-    const updatedEmployee = await this.prisma.employee.update({
-      where: { id },
-      include: this.getEmployeeRelations(),
-      data: { ...newEmployeeData, departmentId },
-    });
 
     return this.formatEmployee(updatedEmployee);
   }
